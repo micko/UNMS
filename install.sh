@@ -3,14 +3,23 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
-repo="https://raw.githubusercontent.com/Ubiquiti-App/UNMS/master"
 temp="/tmp/unms-install"
 
 args="$*"
 version=""
+branch="master"
 
-if [[ "$args" =~ ^[0-9] ]]; then
-  read -r version args <<< "$args"
+branchRegex=" --branch ([^ ]+)"
+if [[ "$args" =~ $branchRegex ]]; then
+  branch="${BASH_REMATCH[1]}"
+fi
+echo branch="$branch"
+
+repo="https://raw.githubusercontent.com/Ubiquiti-App/UNMS/${branch}"
+
+versionRegex=" --version ([^ ]+)"
+if [[ "$args" =~ $versionRegex ]]; then
+  version="${BASH_REMATCH[1]}"
 fi
 
 if [ -z "$version" ]; then
@@ -19,9 +28,7 @@ if [ -z "$version" ]; then
     exit 1
   fi
 fi
-
 echo version="$version"
-echo args="$args"
 
 rm -rf $temp
 if ! mkdir $temp; then
