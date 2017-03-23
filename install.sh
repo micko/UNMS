@@ -35,9 +35,8 @@ if ! mkdir $temp; then
   echo "Failed to create temporary directory"
   exit 1
 fi
+
 cd $temp
-
-
 echo "Downloading installation package for version $version."
 if ! curl -sS "$repo/unms-$version.tar.gz" | tar xz; then
   echo "Failed to download installation package"
